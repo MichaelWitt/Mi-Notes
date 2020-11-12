@@ -9,15 +9,9 @@ Project Info
 
 Thanks for stopping in! I look forward to working together to make the present and future a better place.
 
-## Instructions
+## Application
 
-Intro Video: 
-
-Instructions:
-
-1. 
-2.
-3.
+Mi Notes: https://mi-notes-mw.herokuapp.com/
 
 ## Build Details
 
