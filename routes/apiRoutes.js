@@ -1,40 +1,31 @@
 const router = require("./htmlRoutes");
+var notesData = require("../db/db.json");
 
-// Displays all characters
-router.get("/notes", function (req, res) {
-    return res.json(characters);
+router.get("/api/notes", function (req, res) {
+    return res.json(notesData);
 });
 
-// Displays a single character, or returns false
+router.post("/notes", function (req, res) {
+
+    var newNotes = req.body;
+
+    notesData.push(newNotes);
+
+    res.json(newNotes);
+});
+
 router.delete("/notes/:id", function (req, res) {
-    var chosen = req.params.character;
+    var chosen = req.params.notesData;
 
     console.log(chosen);
 
-    for (var i = 0; i < characters.length; i++) {
-        if (chosen === characters[i].routeName) {
-            return res.json(characters[i]);
+    for (var i = 0; i < notesData.length; i++) {
+        if (chosen === notesData[i].routeName) {
+            return res.json(notesData[i]);
         }
     }
 
     return res.json(false);
-});
-
-// Create New Characters - takes in JSON input
-router.post("/notes", function (req, res) {
-    // req.body hosts is equal to the JSON post sent from the user
-    // This works because of our body parsing middleware
-    var newCharacter = req.body;
-
-    // Using a RegEx Pattern to remove spaces from newCharacter
-    // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-    newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-
-    console.log(newCharacter);
-
-    characters.push(newCharacter);
-
-    res.json(newCharacter);
 });
 
 module.exports = router;
