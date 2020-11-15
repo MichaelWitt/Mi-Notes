@@ -2,16 +2,16 @@ const fs = require('fs');
 var data = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
 
 
-module.exports = function (router) {
+module.exports = function (app) {
 
-    router.get("/api/notes", function (req, res) {
-        return res.json(data);
+    app.get("/api/notes", function (req, res) {
+        res.json(data);
     });
-    router.get("/api/notes/:id", function (req, res) {
-        return res.json(data[Number(req.params.id)]);
+    app.get("/api/notes/:id", function (req, res) {
+        res.json(data[Number(req.params.id)]);
     });
 
-    router.post("/api/notes", function (req, res) {
+    app.post("/api/notes", function (req, res) {
 
         var newNotes = req.body;
         var idNumber = (data.length).toString();
@@ -25,8 +25,8 @@ module.exports = function (router) {
         res.json(data);
     });
 
-    router.delete("/api/notes/:id", function (req, res) {
-        var chosen = req.params.data;
+    app.delete("/api/notes/:id", function (req, res) {
+        var chosen = req.params.id;
         var currentId = 0;
 
         data = data.filter(presentNote => {
@@ -43,6 +43,3 @@ module.exports = function (router) {
     });
 
 }
-
-
-
