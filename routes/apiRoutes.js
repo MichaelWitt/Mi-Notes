@@ -1,31 +1,48 @@
-const router = require("./htmlRoutes");
-var notesData = require("../db/db.json");
+const fs = require('fs');
+var data = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
 
-router.get("/api/notes", function (req, res) {
-    return res.json(notesData);
-});
 
-router.post("/notes", function (req, res) {
+module.exports = function (router) {
 
-    var newNotes = req.body;
+    router.get("/api/notes", function (req, res) {
+        return res.json(data);
+    });
+    router.get("/api/notes/:id", function (req, res) {
+        return res.json(data[Number(req.params.id)]);
+    });
 
-    notesData.push(newNotes);
+    router.post("/api/notes", function (req, res) {
 
-    res.json(newNotes);
-});
+        var newNotes = req.body;
+        var idNumber = (data.length).toString();
+        newNotes.id = idNumber;
+        data.push(newNotes);
 
-router.delete("/notes/:id", function (req, res) {
-    var chosen = req.params.notesData;
+        fs.writeFileSync("./db/db.json", JSON.stringify(data), function (err) {
+            if (err) throw (err);
+        });
 
-    console.log(chosen);
+        res.json(data);
+    });
 
-    for (var i = 0; i < notesData.length; i++) {
-        if (chosen === notesData[i].routeName) {
-            return res.json(notesData[i]);
+    router.delete("/api/notes/:id", function (req, res) {
+        var chosen = req.params.data;
+        var currentId = 0;
+
+        data = data.filter(presentNote => {
+            return presentNote.id != chosen;
+        });
+
+        for (presentNote of data) {
+            presentNote.id = currentId.toString();
+            currentId++;
         }
-    }
 
-    return res.json(false);
-});
+        fs.writeFileSync('./db/db.json', JSON.stringify(data));
+        res.json(data);
+    });
 
-module.exports = router;
+}
+
+
+
