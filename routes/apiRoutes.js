@@ -1,45 +1,44 @@
 const fs = require('fs');
-var data = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-
+var notesData = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
 
 module.exports = function (app) {
 
     app.get("/api/notes", function (req, res) {
-        res.json(data);
+        res.json(notesData);
     });
     app.get("/api/notes/:id", function (req, res) {
-        res.json(data[Number(req.params.id)]);
+        res.json(notesData[Number(req.params.id)]);
     });
 
     app.post("/api/notes", function (req, res) {
 
         var newNotes = req.body;
-        var idNumber = (data.length).toString();
+        var idNumber = (notesData.length).toString();
         newNotes.id = idNumber;
-        data.push(newNotes);
+        notesData.push(newNotes);
 
-        fs.writeFileSync("./db/db.json", JSON.stringify(data), function (err) {
+        fs.writeFileSync("./db/db.json", JSON.stringify(notesData), function (err) {
             if (err) throw (err);
         });
 
-        res.json(data);
+        res.json(notesData);
     });
 
     app.delete("/api/notes/:id", function (req, res) {
         var chosen = req.params.id;
-        var currentId = 0;
+        var noteId = 0;
 
-        data = data.filter(presentNote => {
+        notesData = notesData.filter(presentNote => {
             return presentNote.id != chosen;
         });
 
-        for (presentNote of data) {
-            presentNote.id = currentId.toString();
-            currentId++;
+        for (presentNote of notesData) {
+            presentNote.id = noteId.toString();
+            noteId++;
         }
 
-        fs.writeFileSync('./db/db.json', JSON.stringify(data));
-        res.json(data);
+        fs.writeFileSync('./db/db.json', JSON.stringify(notesData));
+        res.json(notesData);
     });
 
 }
