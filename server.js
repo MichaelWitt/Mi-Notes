@@ -1,5 +1,6 @@
 var express = require("express");
 
+// The server runs using express
 var app = express();
 var PORT = process.env.PORT || 3001;
 

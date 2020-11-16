@@ -1,5 +1,6 @@
 const path = require("path");
 
+// Exporting our html routes
 module.exports = function (app) {
 
     app.get("/", function (req, res) {
